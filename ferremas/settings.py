@@ -44,7 +44,7 @@ MIDDLEWARE = [
 # Configuración CORS (permite solicitudes desde otros dominios)
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",  # Para desarrollo local
-    "https://prueba-propia-ferremas-production.up.railway.app",  # Para producción en Railway
+    "https://prueba-ferremas-js-production.up.railway.app",  # Para producción en Railway
 ]
 
 # Archivo de configuración para las URLs del proyecto.
@@ -119,7 +119,7 @@ WHITENOISE_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para producción: asegurarse de que los formularios CSRF funcionen correctamente
-CSRF_TRUSTED_ORIGINS = ['https://prueba-propia-ferremas-production.up.railway.app']  # Agregar dominio de Railway
+CSRF_TRUSTED_ORIGINS = ['https://prueba-ferremas-js-production.up.railway.app']  # Agregar dominio de Railway
 
 # Configuración de los archivos multimedia (si es necesario para manejar archivos de imagen, etc.)
 MEDIA_URL = '/media/'
