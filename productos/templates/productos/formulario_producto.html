@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Producto</title>
+    <!-- Carga del CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container my-5">
+        <!-- Título FERREMAS en la parte superior -->
+        <h1 class="text-center text-success mb-5">FERREMAS</h1>
+
+        <div class="card p-4">
+            <h2 class="text-center mb-4">Agregar Nuevo Producto</h2>
+
+            <!-- Formulario para agregar producto -->
+            <form id="form-producto">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio:</label>
+                    <input type="number" id="precio" name="precio" class="form-control" required step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label for="imagen">Imagen (URL):</label>
+                    <input type="url" id="imagen" name="imagen" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock:</label>
+                    <input type="number" id="stock" name="stock" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria" class="form-control" required>
+                        <option value="">Seleccione una categoría</option>
+                        <option value="Herramientas">Herramientas</option>
+                        <option value="Electricidad">Electricidad</option>
+                        <option value="Plomería">Quincallería</option>
+                        <option value="Pinturas">Pinturas</option>
+                        <option value="Tornillería">Tornillería</option>
+                        <option value="Adhesivos">Adhesivos</option>
+                        <option value="Jardinería">Jardinería</option>
+                        <option value="Construcción">Construcción</option>
+                        <option value="Seguridad">Seguridad</option>
+                        <option value="Otra">Otra (especificar)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="categoria-personalizada-group" style="display: none;">
+                    <label for="categoria-personalizada">Categoría personalizada:</label>
+                    <input type="text" id="categoria-personalizada" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block">Agregar Producto</button>
+            </form>
+
+            <!-- Botón de volver con flecha -->
+            <a href="/productos/crud/" class="btn btn-outline-success btn-block mt-3">
+                <span class="arrow-left">&#8592;</span> Volver
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar u ocultar campo personalizado según selección
+        document.getElementById("categoria").addEventListener("change", function () {
+            const personalizadaGroup = document.getElementById("categoria-personalizada-group");
+            if (this.value === "Otra") {
+                personalizadaGroup.style.display = "block";
+                document.getElementById("categoria-personalizada").required = true;
+            } else {
+                personalizadaGroup.style.display = "none";
+                document.getElementById("categoria-personalizada").required = false;
+            }
+        });
+
+        // Manejo del formulario para enviar los datos a la API
+        document.getElementById("form-producto").addEventListener("submit", function(event) {
+            event.preventDefault();  // Evitar que el formulario se envíe de forma tradicional
+
+            // Obtener los datos del formulario
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Reemplazar la categoría por la personalizada si se seleccionó "Otra"
+            if (data.categoria === "Otra") {
+                data.categoria = document.getElementById("categoria-personalizada").value;
+            }
+
+            // Hacer una solicitud POST a la API para agregar el producto
+            fetch('/productos/api/agregar/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),  // Enviar los datos del formulario en formato JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Producto agregado correctamente!");
+                console.log(data);  // Mostrar la respuesta de la API (producto creado)
+                document.getElementById("form-producto").reset();
+                document.getElementById("categoria-personalizada-group").style.display = "none";
+            })
+            .catch(error => {
+                alert("Error al agregar el producto.");
+                console.error("Error:", error);
+            });
+        });
+    </script>
+
+    <!-- Carga de JS de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
